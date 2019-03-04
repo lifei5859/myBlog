@@ -1,16 +1,9 @@
 let rightBox = new Vue({
     el: '#right',
     data: {
-        tags: [
-            'telnet',
-            '个人博客',
-            '音乐',
-            'Sunshine GirlE6mac',
-            '数据结构',
-            'seo蛋疼',
-            'dedecms',
-            '模拟航天飞机'
-        ]
+        tags: [],
+        nowHots: [],
+        newComments: []
     },
     computed: {
         // tagStyle () {
@@ -36,9 +29,50 @@ let rightBox = new Vue({
             let size = `font-size: ${str}px`
             console.log(`${color};${size}`)
             return `${color};${size}`
+        },
+        queryTag () {
+            axios.get('/getTagPage').then(data => {
+                if (data.data.status === 'success') {
+                    let arr = []
+                    console.log(data.data.data)
+                    data.data.data.forEach(item => {
+                        let obj = {}
+                        obj.tag = item.tag
+                        obj.id = item.id
+                        arr.push(obj)
+                    })
+                    this.tags = arr
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        queryBlogByTag (tid) {
+            // console.log(tid)
+            axios.get(`/queryMappingByTag?tid=${tid}`).then( data => {
+                console.log(data)
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        queryNowHots () {
+            axios.get().then(data => {
+
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        queryNewComments () {
+            axios.get().then(data => {
+
+            }).catch(err => {
+                console.log(err)
+            })
         }
     },
     created () {
-
+        this.queryTag ()
     }
 })
+
+// let nowHot = new Vue ()

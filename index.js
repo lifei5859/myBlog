@@ -1,9 +1,22 @@
 const express = require('express')
-
+const globalConfig = require('./config')
+const loader = require('./loader')
 let server = new express()
 
 server.use(express.static('./page/'))
 
-server.listen(10086, () => {
-    console.log('服务器已启动， 通过 http://127.0.0.1:10086 访问')
+server.post('/innerEveryday', loader.get('/innerEveryday'))
+server.post('/innerArt', loader.get('/innerArt'))
+server.get('/queryEveryday', loader.get('/queryEveryday'))
+server.get('/queryArt', loader.get('/queryArt'))
+server.get('/queryCount', loader.get('/queryCount'))
+server.get('/queryArtById', loader.get('/queryArtById'))
+server.post('/addComment', loader.get('/addComment'))
+server.get('/queryCode', loader.get('/queryCode'))
+server.get('/queryComPage', loader.get('/queryComPage'))
+server.get('/queryComCount', loader.get('/queryComCount'))
+server.get('/getTagPage', loader.get('/getTagPage'))
+server.get('/queryMappingByTag', loader.get('/queryMappingByTag'))
+server.listen(globalConfig['port'], () => {
+    console.log(`服务器已启动， 通过 http://127.0.0.1:${globalConfig['port']} 访问`)
 })
