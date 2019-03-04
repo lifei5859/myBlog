@@ -2,9 +2,199 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>文章详情</title>
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/blog_detail.css">
 </head>
 <body>
-$END$
+<body>
+<header  class="header">
+    <div class="header_content">
+        <a class="title" href="#">我的个人博客 | 技术博客</a>
+        <ul class="header_nav">
+            <li><a href="#">首页</a></li>
+            <li><a href="./blogMap.html">地图</a></li>
+            <li><a href="./about.html">关于</a></li>
+            <li><a href="./commentBook.html">留言</a></li>
+        </ul>
+        <p class="search_bar"><input type="text" placeholder="请输入关键词查找"> <button>搜索</button></p>
+    </div>
+</header>
+<main class="container_wrapper">
+    <div class="container">
+        <div class="left" id="article-detail">
+            <div class="article-detail" >
+                <p>当前位置:
+                    <a href="index.html">博客首页</a> >>
+                    <a href="" v-if="article.tags">{{ article.tags[0] }}</a> >>
+                    <span>  阅读正文</span>
+                </p>
+                <h2>{{ article.title }}</h2>
+                <p>
+                    作者: <span> me </span> 分类: <a href="" v-if="article.tags"> {{ article.tags[0] }}</a> 发布于: <span>{{ article.ctime }}</span> 浏览 <span>({{ article.views }})</span>
+                    <a href="#write" v-if="count">没有评论</a>
+                </p>
+                <hr>
+                <div v-html="article.content">
+
+                </div>
+                <div class="article-footer">
+                    <p>本文采用<a href="">知识共享署名-非商业性使用 3.0 中国大陆许可协议</a>进行许可，转载时请注明出处及相应链接。</p>
+                    <p>本文永久链接: <a href="">asdasdsdfasdfasdf</a> </p>
+                </div>
+
+            </div>
+            <div class="comments" v-if="commentList">
+                <h3 class="comments-title">{{ article.title }}：目前有{{ count }}条留言</h3>
+                <dl class="comments-list" v-for = "(item, index) in commentList" :key="index">
+                    <dt class="">
+                        <img class="comment-author-icon" src="./img/touxiang.jpg" alt="">
+                        <p class="comment-title">
+                            <strong class="comment-author">{{ item.use }}：</strong> <span v-if="item.parentUse">[回复]    {{ item.parentUse }}</span>
+                            <span class="comment-date">发表于 {{item.ctime}}</span>
+                            <a href="#write" @click="reply( item.use )">[回复]</a>
+                        </p>
+                    </dt>
+                    <dd class="comment-content">{{ item.content }}</dd>
+                </dl>
+
+                <ul class="page-btn-wrapper" v-if="count">
+                    <li v-for="(item, index) in pageBtn" @click="getPage(item.page)" :class="{'active-page':(page === item.text) }">{{ item.text }}</li>
+                </ul>
+            </div>
+            <div class="article-detail  write-comments" id="write">
+                <h3 class="write-title">发表评论</h3>
+                <p class="write-person" :class="{'use-error': (error === 'useError'), 'use-null': (error === 'useNull') , 'email-error': (error === 'emailError')}">
+                    <input type="text" class="" placeholder="昵称" v-model="use">
+                    <input type="text" placeholder="邮箱（收到回复会通知的）" v-model="email"></p>
+                <p class="write-detail" :class="{'content-error': (error === 'comError')}"><textarea placeholder="无意义内容我可能不会回复你" v-model="commentContent"></textarea></p><span></span>
+                <p class="verification-code" :class="{'code-err': (error === 'codeError')}"><input type="text" placeholder="验证码" v-model="commentCode">
+                    <span v-if="codeObj.data" v-html="codeObj.data"></span>
+                </p>
+                <p class="write-btn">
+                    <button @click="addComment">提交留言</button>
+                    <button @click="">清空重写</button>
+                    <button v-if="replyUse" @click="replyUse = ''">取消回复</button>
+                </p>
+            </div>
+        </div>
+        <div class="right">
+            <div class="right-boxs" id="right">
+                <dl class="random-tags">
+                    <dt class="right-titles">随机标签云</dt>
+                    <div class="random-content">
+                        <dd v-for="(item, index) in tags" :key="index"><a href="#" :style="tagStyle()">{{ item.tag }}</a></dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="right-boxs">
+                <dl class="hots">
+                    <dt class="right-titles">最近热门</dt>
+                    <div class="hots-content">
+                        <dd><a href="#">查看你的AWS服务器已使用流量</a></dd>
+                        <dd><a href="#">python+selenium自动登录qq空间并下载</a></dd>
+                        <dd><a href="#">vscode+XDebug调试远程环境(虚拟机</a></dd>
+                        <dd><a href="#">VirtualBox压缩vmdk、vagrant打包b</a></dd>
+                        <dd><a href="#">ubuntu下cmake报错Could NOT fin</a></dd>
+                        <dd><a href="#">使用码云git的webhook实现生产环境代</a></dd>
+                        <dd><a href="#">填坑解决homestead中serve添加多站点</a></dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="right-boxs">
+                <dl class="new-comments">
+                    <dt class="right-titles">最新评论</dt>
+                    <div class="comment-content">
+                        <dd class="comment-item">
+                            <p class="comment-item-header">
+                                <span class="comment-author">许寒</span>
+                                <span class="comment-ctime">[1小时前]</span>
+                            </p>
+                            <p class="comment-item-text">
+                                <a href="#">求大佬指导指导，小弟找了很久，都找不</a>
+                            </p>
+                        </dd>
+                        <dd class="comment-item">
+                            <p class="comment-item-header">
+                                <span class="comment-author">许寒</span>
+                                <span class="comment-ctime">[15小时前]</span>
+                            </p>
+                            <p class="comment-item-text">
+                                <a href="#">WordPress重复链接过多怎么处</a>
+                            </p>
+                        </dd>
+                        <dd class="comment-item">
+                            <p class="comment-item-header">
+                                <span class="comment-author">SKY8G网</span>
+                                <span class="comment-ctime">[1周前]</span>
+                            </p>
+                            <p class="comment-item-text">
+                                <a href="#">古来看看，新年快乐</a>
+                            </p>
+                        </dd>
+                        <dd class="comment-item">
+                            <p class="comment-item-header">
+                                <span class="comment-author">阿杰学长</span>
+                                <span class="comment-ctime">[2周前]</span>
+                            </p>
+                            <p class="comment-item-text">
+                                <a href="#">怎么申请友情链接 qidian01</a>
+                            </p>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="right-boxs">
+                <dl class="links">
+                    <dt class="right-titles">友情链接</dt>
+                    &nbsp;
+                    <div class="links-content">
+                        <dd class="links-item">
+                            <p><a href="#">挨踢茶馆</a></p>
+                            <p><a href="#">佛布朗斯基</a></p>
+                        </dd>
+                        <dd class="links-item">
+                            <p><a href="#">挨踢茶馆</a></p>
+                            <p><a href="#">佛布朗斯基</a></p>
+                        </dd>
+                        <dd class="links-item">
+                            <p><a href="#">挨踢茶馆</a></p>
+                            <p><a href="#">佛布朗斯基</a></p>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</main>
+<footer  class="footer">
+    <ul class="footer-link">
+        <li><a href="#">C/C++</a></li>
+        <li><a href="#"> CSS/DIV </a></li>
+        <li><a href="#">java </a></li>
+        <li><a href="#">javacript</a></li>
+        <li><a href="#"> Linux </a></li>
+        <li><a href="#">Mac </a></li>
+        <li><a href="#">PC技术 </a></li>
+        <li><a href="#">PHP</a></li>
+        <li><a href="#"> Python </a></li>
+        <li><a href="#">C/C++</a></li>
+        <li><a href="#"> CSS/DIV </a></li>
+        <li><a href="#">java </a></li>
+        <li><a href="#">javacript</a></li>
+        <li><a href="#"> Linux </a></li>
+        <li><a href="#">Mac </a></li>
+        <li><a href="#">PC技术 </a></li>
+        <li><a href="#">PHP</a></li>
+        <li><a href="#"> Python </a></li>
+    </ul>
+    <p>Copyright © 2010-2017 My个人博客 All rights reserved. 由免费开源的WordPress强力驱动. 鲁ICP备14017955号站长统计</p>
+</footer>
+<script src="./js/axios.js"></script>
+<script src="./js/moment.js"></script>
+<script src="https://lib.baomitu.com/vue/2.6.6/vue.js"></script>
+<script src="./js/base.js"></script>
+<script src="./js/blogDetail.js"></script>
+</body>
 </body>
 </html>

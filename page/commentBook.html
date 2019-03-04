@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>about</title>
     <link rel="stylesheet" href="./css/base.css">
-
+    <link rel="stylesheet" href="./css/commentBook.css">
 </head>
 <body>
 <header  class="header">
@@ -22,22 +22,55 @@
 <main class="container_wrapper">
     <div class="container">
         <div class="left">
+            <div class="myBb">
+                <p class="myBb-content">
+                    <span>欢迎灌水交流，别看我长时间不发博，博主可一直都在线~</span>
+                    <span>友链只交换技术类个人博客。</span>
+                    <span>不要皮，谢谢。</span>
+                </p>
+            </div>
+            <div id="my-comment">
+                <div class="comments" v-if="commentList" >
+                    <h3 class="comments-title">关于：目前有{{ count }}条留言</h3>
+                    <dl class="comments-list" v-for = "(item, index) in commentList" :key="index">
+                        <dt class="">
+                            <img class="comment-author-icon" src="./img/touxiang.jpg" alt="">
+                            <p class="comment-title">
+                                <strong class="comment-author">{{ item.use }}：</strong> <span v-if="item.parentUse">[回复]    {{ item.parentUse }}</span>
+                                <span class="comment-date">发表于 {{item.ctime}}</span>
+                                <a href="#write" @click="reply( item.use )">[回复]</a>
+                            </p>
+                        </dt>
+                        <dd class="comment-content">{{ item.content }}</dd>
+                    </dl>
 
+                    <ul class="page-btn-wrapper">
+                        <li v-for="(item, index) in pageBtn" @click="getPage(item.page)" :class="{'active-page':(page === item.text) }">{{ item.text }}</li>
+                    </ul>
+                </div>
+                <div class="article-detail  write-comments" id="write-about">
+                    <h3 class="write-title">发表评论</h3>
+                    <p class="write-person" :class="{'use-error': (error === 'useError'), 'use-null': (error === 'useNull') , 'email-error': (error === 'emailError')}">
+                        <input type="text" class="" placeholder="昵称" v-model="use">
+                        <input type="text" placeholder="邮箱（收到回复会通知的）" v-model="email"></p>
+                    <p class="write-detail" :class="{'content-error': (error === 'comError')}"><textarea placeholder="无意义内容我可能不会回复你" v-model="commentContent"></textarea></p><span></span>
+                    <p class="verification-code" :class="{'code-err': (error === 'codeError')}"><input type="text" placeholder="验证码" v-model="commentCode">
+                        <span v-if="codeObj.data" v-html="codeObj.data"></span>
+                    </p>
+                    <p class="write-btn">
+                        <button @click="addComment">提交留言</button>
+                        <button @click="">清空重写</button>
+                        <button v-if="replyUse" @click="replyUse = ''">取消回复</button>
+                    </p>
+                </div>
             </div>
         </div>
         <div class="right">
-            <div class="right-boxs">
+            <div class="right-boxs" id="right">
                 <dl class="random-tags">
                     <dt class="right-titles">随机标签云</dt>
                     <div class="random-content">
-                        <dd><a href="#">telnet</a></dd>
-                        <dd><a href="#">个人博客</a></dd>
-                        <dd><a href="#">音乐</a></dd>
-                        <dd><a href="#">Sunshine GirlE6mac</a></dd>
-                        <dd><a href="#">数据结构</a></dd>
-                        <dd><a href="#">seo蛋疼</a></dd>
-                        <dd><a href="#">dedecms</a></dd>
-                        <dd><a href="#">模拟航天飞机</a></dd>
+                        <dd v-for="(item, index) in tags" :key="index"><a href="#" :style="tagStyle()">{{ item }}</a></dd>
                     </div>
                 </dl>
             </div>
@@ -144,5 +177,10 @@
     </ul>
     <p>Copyright © 2010-2017 My个人博客 All rights reserved. 由免费开源的WordPress强力驱动. 鲁ICP备14017955号站长统计</p>
 </footer>
+<script src="./js/axios.js"></script>
+<script src="./js/moment.js"></script>
+<script src="https://lib.baomitu.com/vue/2.6.6/vue.js"></script>
+<script src="./js/base.js"></script>
+<script src="./js/commentBook.js"></script>
 </body>
 </html>
