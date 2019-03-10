@@ -1,5 +1,3 @@
-// const axios = require('axios')
-console.log(moment)
 let everydayVm = new Vue({
     el: '#everyday',
     data: {
@@ -42,28 +40,54 @@ let articleVm = new Vue({
     },
     methods: {
         getPageList () {
-            let url = `/queryArt?page=${this.page - 1}&pageSize=${this.pageSize}`
-            axios.get(url).then(data => {
-                if (data.data.msg === '成功') {
-                    let values = data.data.data
-                    let arr = []
-                    values.forEach(item => {
-                        let temp = {}
-                        temp.articleTitle = item.title
-                        temp.articleContent = item.content.replace(/<[^>]+>/g, '').substring(0, 235)+ '...'
-                        temp.tags = item.tags.split(',')
-                        temp.view = item.views
-                        temp.ctime = moment(item.ctime).format().split('T')[0]
-                        temp.link = `blog_detail.html?bid=${item.id}`
-                        arr.push(temp)
-                    })
-                    articleVm.article = arr
-                } else {
-                    throw new Error('请求失败')
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            let params = location.search.indexOf('?') > -1 ? location.search.split('?')[1].split('&') : '';
+            let tid = params ? (params[0].split('=')[0] === 'tid' ? params[0].split('=')[1] : '') : ''
+
+            if (tid) {
+                let url = `/queryMappingByTag?page=${this.page - 1}&pageSize=${this.pageSize}&tid=${tid}`
+                axios.get(url).then(data => {
+                    if (data.data.msg === '成功') {
+                        let values = data.data.data
+                        let arr = []
+                        values.forEach(item => {
+                            let temp = {}
+                            temp.articleTitle = item.title
+                            temp.articleContent = item.content.replace(/<[^>]+>/g, '').substring(0, 235)+ '...'
+                            temp.tags = item.tags.split(',')
+                            temp.view = item.views
+                            temp.ctime = moment(item.ctime).format().split('T')[0]
+                            temp.link = `blog_detail.html?bid=${item.id}`
+                            arr.push(temp)
+                        })
+                        this.getCount(`/queryCountByTag?tid=${tid}`)
+                        this.article = arr
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            } else {
+                let url = `/queryArt?page=${this.page - 1}&pageSize=${this.pageSize}`
+                axios.get(url).then(data => {
+                    if (data.data.msg === '成功') {
+                        let values = data.data.data
+                        let arr = []
+                        values.forEach(item => {
+                            let temp = {}
+                            temp.articleTitle = item.title
+                            temp.articleContent = item.content.replace(/<[^>]+>/g, '').substring(0, 235)+ '...'
+                            temp.tags = item.tags.split(',')
+                            temp.view = item.views
+                            temp.ctime = moment(item.ctime).format().split('T')[0]
+                            temp.link = `blog_detail.html?bid=${item.id}`
+                            arr.push(temp)
+                        })
+                        this.getCount('/queryCount')
+                        this.article = arr
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
         },
         getPage (item) {
             console.log(item)
@@ -71,19 +95,11 @@ let articleVm = new Vue({
             this.getPageList()
             document.getElementsByTagName('html')[0].scrollTop=0
         },
-        getCount () {
-            let url = '/queryCount'
+        getCount (url) {
             axios.get(url).then(data => {
                 if (data.data.msg === '成功') {
                     this.count = data.data.data[0].count
                 }
-            })
-        },
-        view (num) {
-            axios.get(`/addView${num}`).then(data => {
-
-            }).catch(err => {
-                console.log(err)
             })
         }
     },
@@ -108,13 +124,11 @@ let articleVm = new Vue({
                 arr.push({text: page + 2, page: page + 2})
             }
             arr.push({text: '>>', page: parseInt((count + pageSize - 1) / pageSize)})
-            console.log(arr)
             return arr
         }
     },
     created () {
         this.getPageList()
-        this.getCount()
     }
 })
 

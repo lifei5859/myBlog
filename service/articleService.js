@@ -15,13 +15,25 @@ function queryArtById (id, success) {
     articleDao.queryArtById(id, success)
 }
 
-function addView (num, success) {
-    articleDao.addView(num, success)
+function addView (id, success) {
+    articleDao.addView(id, success)
 
 }
+
+function queryNowHots (success) {
+    articleDao.queryNowHots(success)
+}
+
+function queryBlogByKeyword (keyword, success) {
+    articleDao.queryBlogByKeyword(keyword, success)
+}
+
 module.exports = {
     innerArticle,
     queryArt,
     queryCount,
-    queryArtById
+    queryArtById,
+    addView,
+    queryNowHots,
+    queryBlogByKeyword
 }

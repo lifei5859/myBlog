@@ -29,7 +29,7 @@
                     <span>不要皮，谢谢。</span>
                 </p>
             </div>
-            <div id="my-comment">
+            <div v-cloak id="my-comment">
                 <div class="comments" v-if="commentList" >
                     <h3 class="comments-title">关于：目前有{{ count }}条留言</h3>
                     <dl class="comments-list" v-for = "(item, index) in commentList" :key="index">
@@ -65,12 +65,12 @@
                 </div>
             </div>
         </div>
-        <div class="right">
-            <div class="right-boxs" id="right">
+        <div v-cloak class="right" id="right">
+            <div class="right-boxs" >
                 <dl class="random-tags">
                     <dt class="right-titles">随机标签云</dt>
                     <div class="random-content">
-                        <dd v-for="(item, index) in tags" :key="index"><a href="#" :style="tagStyle()">{{ item }}</a></dd>
+                        <dd v-for="(item, index) in tags" :key="index"><a :href="item.link" :style="tagStyle()" >{{ item.tag }}</a></dd>
                     </div>
                 </dl>
             </div>
@@ -78,13 +78,7 @@
                 <dl class="hots">
                     <dt class="right-titles">最近热门</dt>
                     <div class="hots-content">
-                        <dd><a href="#">查看你的AWS服务器已使用流量</a></dd>
-                        <dd><a href="#">python+selenium自动登录qq空间并下载</a></dd>
-                        <dd><a href="#">vscode+XDebug调试远程环境(虚拟机</a></dd>
-                        <dd><a href="#">VirtualBox压缩vmdk、vagrant打包b</a></dd>
-                        <dd><a href="#">ubuntu下cmake报错Could NOT fin</a></dd>
-                        <dd><a href="#">使用码云git的webhook实现生产环境代</a></dd>
-                        <dd><a href="#">填坑解决homestead中serve添加多站点</a></dd>
+                        <dd v-for="(item, index) in hots" :key="index"><a :href="item.link">{{item.hotTitle}}</a></dd>
                     </div>
                 </dl>
             </div>
@@ -92,40 +86,13 @@
                 <dl class="new-comments">
                     <dt class="right-titles">最新评论</dt>
                     <div class="comment-content">
-                        <dd class="comment-item">
+                        <dd class="comment-item" v-for="(item, index) in newComments" :key="index">
                             <p class="comment-item-header">
-                                <span class="comment-author">许寒</span>
-                                <span class="comment-ctime">[1小时前]</span>
+                                <span class="comment-author">{{item.use}}</span>
+                                <span class="comment-ctime">[{{item.ctime}}]</span>
                             </p>
                             <p class="comment-item-text">
-                                <a href="#">求大佬指导指导，小弟找了很久，都找不</a>
-                            </p>
-                        </dd>
-                        <dd class="comment-item">
-                            <p class="comment-item-header">
-                                <span class="comment-author">许寒</span>
-                                <span class="comment-ctime">[15小时前]</span>
-                            </p>
-                            <p class="comment-item-text">
-                                <a href="#">WordPress重复链接过多怎么处</a>
-                            </p>
-                        </dd>
-                        <dd class="comment-item">
-                            <p class="comment-item-header">
-                                <span class="comment-author">SKY8G网</span>
-                                <span class="comment-ctime">[1周前]</span>
-                            </p>
-                            <p class="comment-item-text">
-                                <a href="#">古来看看，新年快乐</a>
-                            </p>
-                        </dd>
-                        <dd class="comment-item">
-                            <p class="comment-item-header">
-                                <span class="comment-author">阿杰学长</span>
-                                <span class="comment-ctime">[2周前]</span>
-                            </p>
-                            <p class="comment-item-text">
-                                <a href="#">怎么申请友情链接 qidian01</a>
+                                <a :href="item.link">{{item.content}}</a>
                             </p>
                         </dd>
                     </div>

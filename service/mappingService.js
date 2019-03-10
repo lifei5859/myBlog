@@ -4,11 +4,16 @@ function innerMapping (tagId, blogId, ctime, utime, success) {
     mappingDao.innerMapping(tagId, blogId, ctime, utime, success)
 }
 
-function queryBlogIdByTag (tagId, success) {
-    mappingDao.queryBlogIdByTag(tagId, success)
+function queryBlogIdByTag (tagId, page, pageSize, success) {
+    mappingDao.queryBlogIdByTag(tagId, page, pageSize, success)
+}
+
+function queryCountByTag (tagId, success) {
+    mappingDao.queryCountByTag(tagId, success)
 }
 
 module.exports = {
     innerMapping,
-    queryBlogIdByTag
+    queryBlogIdByTag,
+    queryCountByTag
 }

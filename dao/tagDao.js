@@ -1,5 +1,5 @@
 const dao = require('./DButil')
-
+//写入标签
 function innerTag (tag, ctime, utime, success) {
     let insertSql = 'insert into tags (tag, ctime, utime) values (?, ?, ?)'
     let connect = dao.createConnection()
@@ -14,7 +14,7 @@ function innerTag (tag, ctime, utime, success) {
     })
     connect.end()
 }
-
+//根据标签查询标签详情
 function queryTag (tag, success) {
     let querySql = 'select * from tags where tag=?;'
     let connect = dao.createConnection()
@@ -29,7 +29,7 @@ function queryTag (tag, success) {
     })
     connect.end()
 }
-
+//查询所有标签
 function queryTagPage (success) {
     let querySql = 'select * from tags;'
     let connect = dao.createConnection()
@@ -44,7 +44,7 @@ function queryTagPage (success) {
     })
     connect.end()
 }
-
+//方法导出
 module.exports = {
     innerTag,
     queryTag,

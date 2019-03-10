@@ -1,21 +1,17 @@
-const respUtil = require('../util/respUtil')
-const mappingDao = require('../service/mappingService')
-const url = require('url')
-
+const respUtil = require('../util/respUtil')  //引入处理返回数据方法
+const mappingDao = require('../service/mappingService')  //引入映射表数据库方法
+const url = require('url')  //引入url
+// 创建方法容器
 let path = new Map()
-
-function queryMappingByTag (request, response) {
+// 查询符合标签的文章总数
+function queryCountByTag (request, response) {
     let params = url.parse(request.url, true).query
-    mappingDao.queryBlogIdByTag(Number(params.tid), resp => {
-        let temp = []
-        resp.forEach( item => {
-            temp.push(item['blog_id'])
-        })
+    mappingDao.queryCountByTag(Number(params.tid), resp => {
         response.writeHead(200)
-        response.end(respUtil('success', '成功', temp))
+        response.end(respUtil('success', '成功', resp))
     })
 }
-
-path.set('/queryMappingByTag', queryMappingByTag)
-
+// 查询符合标签的文章总数方法放入容器
+path.set('/queryCountByTag', queryCountByTag)
+//方法容器导出
 module.exports.path = path

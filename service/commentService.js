@@ -12,8 +12,13 @@ function queryComCount (bid, success) {
     commentsDao.queryComCount(bid, success)
 }
 
+function queryNewComments (success) {
+    commentsDao.queryNewComments(success)
+}
+
 module.exports = {
     addCom,
     queryComPage,
-    queryComCount
+    queryComCount,
+    queryNewComments
 }
